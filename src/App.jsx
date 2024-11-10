@@ -70,7 +70,7 @@ function App() {
     <div className="flex justify-center items-center min-h-screen bg-gray-200">
       <div className="w-full max-w-xs bg-white p-4 rounded-md shadow-md">
         <FcTodoList className='text-4xl absolute right-15' />
-        <h1 className='text-3xl font-bold text-center mb-2 italic'>TO DO LIST</h1>
+        <h1 className='text-3xl font-bold text-center mb-2 italic text-slate-700'>TO DO LIST</h1>
         <div className='flex gap-4 mb-3'>
           <input
             type="text"
