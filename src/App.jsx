@@ -63,8 +63,8 @@ function App() {
 
   return (
     <div className={`min-h-screen px-3 py-4 sm:p-4 transition-colors duration-300 ${isDarkMode
-        ? 'bg-black'
-        : 'bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800'
+      ? 'bg-black'
+      : 'bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800'
       }`}>
       <div className="max-w-2xl mx-auto">
         <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
@@ -82,14 +82,12 @@ function App() {
           completedCount={completedCount}
           isDarkMode={isDarkMode}
         />
-
         <AddTaskInput
           selectedDate={selectedDate}
           isDarkMode={isDarkMode}
           onAddTask={handleAddTask}
           inputRef={inputRef}
         />
-
         <TaskList
           tasks={currentTasks}
           completedTasks={currentCompletedTasks}

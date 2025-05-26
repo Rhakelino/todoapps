@@ -18,16 +18,12 @@ export const DateUtils = {
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
 
-    // Mendapatkan jam saat ini
+    // Mendapatkan jam saat ini (jam 00:00 dianggap sebagai pergantian hari)
     const currentHour = today.getHours();
 
-    // Logika jika pergantian hari terjadi pada jam 12 tengah malam
+    // Logika pergantian hari pada jam 12 tengah malam
     if (DateUtils.formatDateKey(date) === DateUtils.formatDateKey(today)) {
-      if (currentHour === 0) {
-        return 'Hari Ini';
-      } else {
-        return 'Kemarin';
-      }
+      return 'Hari Ini';  // Menampilkan 'Hari Ini' terlepas dari jam
     } else if (DateUtils.formatDateKey(date) === DateUtils.formatDateKey(tomorrow)) {
       return 'Besok';
     } else if (DateUtils.formatDateKey(date) === DateUtils.formatDateKey(yesterday)) {
