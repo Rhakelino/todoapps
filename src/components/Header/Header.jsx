@@ -14,24 +14,19 @@ const Header = ({ isDarkMode, toggleDarkMode }) => {
         >
           {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
-
-        <div className={`p-2 sm:p-3 rounded-full shadow-lg ${isDarkMode
-          ? 'bg-neutral-900 border border-neutral-800'
-          : 'bg-gradient-to-r from-purple-600 to-blue-600'
+        <div className='flex flex-col'>
+        <h1 className={`text-2xl sm:text-4xl font-bold mb-1 sm:mb-2 ${isDarkMode
+          ? 'text-white'
+          : 'bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent'
           }`}>
-          <List className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+          Schedly
+        </h1>
+        <p className={`text-sm sm:text-base ${isDarkMode ? 'text-neutral-400' : 'text-gray-400'
+          }`}>
+          Plan your day, achieve your dreams
+        </p>
         </div>
       </div>
-      <h1 className={`text-2xl sm:text-4xl font-bold mb-1 sm:mb-2 ${isDarkMode
-        ? 'text-white'
-        : 'bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent'
-        }`}>
-        Schedly
-      </h1>
-      <p className={`text-sm sm:text-base ${isDarkMode ? 'text-neutral-400' : 'text-gray-400'
-        }`}>
-        Plan your day, achieve your dreams
-      </p>
     </div>
   );
 };
