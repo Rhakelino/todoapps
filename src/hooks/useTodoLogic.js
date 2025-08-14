@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react';
 import { DateUtils } from '../utils/DateUtils';
 
 export const useTodoLogic = () => {
+  // Initialize selectedDate with normalized date
   const [tasks, setTasks] = useState({});
   const [editValue, setEditValue] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [completedTask, setCompletedTask] = useState({});
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  });
 
   // Get current date tasks
   const getCurrentTasks = () => {
@@ -36,8 +41,15 @@ export const useTodoLogic = () => {
       
       setTasks(newTasksState);
       setCompletedTask(newCompletedState);
-      localStorage.setItem("tasks", JSON.stringify(newTasksState));
-      localStorage.setItem("completedTask", JSON.stringify(newCompletedState));
+      
+      // Ensure persistent storage
+      try {
+        localStorage.setItem("tasks", JSON.stringify(newTasksState));
+        localStorage.setItem("completedTask", JSON.stringify(newCompletedState));
+      } catch (error) {
+        console.error("Error saving tasks to localStorage", error);
+      }
+      
       return true;
     }
     return false;
@@ -57,8 +69,13 @@ export const useTodoLogic = () => {
     
     setTasks(newTasksState);
     setCompletedTask(newCompletedState);
-    localStorage.setItem("tasks", JSON.stringify(newTasksState));
-    localStorage.setItem("completedTask", JSON.stringify(newCompletedState));
+    
+    try {
+      localStorage.setItem("tasks", JSON.stringify(newTasksState));
+      localStorage.setItem("completedTask", JSON.stringify(newCompletedState));
+    } catch (error) {
+      console.error("Error saving tasks to localStorage", error);
+    }
   };
 
   // Start editing
@@ -79,7 +96,13 @@ export const useTodoLogic = () => {
     
     const newTasksState = { ...tasks, [dateKey]: updatedTasks };
     setTasks(newTasksState);
-    localStorage.setItem("tasks", JSON.stringify(newTasksState));
+    
+    try {
+      localStorage.setItem("tasks", JSON.stringify(newTasksState));
+    } catch (error) {
+      console.error("Error saving tasks to localStorage", error);
+    }
+    
     setEditingIndex(null);
     setEditValue("");
     return true;
@@ -101,41 +124,60 @@ export const useTodoLogic = () => {
     
     const newCompletedState = { ...completedTask, [dateKey]: updatedCompletedTask };
     setCompletedTask(newCompletedState);
-    localStorage.setItem("completedTask", JSON.stringify(newCompletedState));
+    
+    try {
+      localStorage.setItem("completedTask", JSON.stringify(newCompletedState));
+    } catch (error) {
+      console.error("Error saving completed tasks to localStorage", error);
+    }
   };
 
   // Toggle dark mode
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", JSON.stringify(newDarkMode));
+    
+    try {
+      localStorage.setItem("darkMode", JSON.stringify(newDarkMode));
+    } catch (error) {
+      console.error("Error saving dark mode preference", error);
+    }
   };
 
   // Navigation functions
   const goToPreviousDay = () => {
     const previousDay = new Date(selectedDate);
     previousDay.setDate(selectedDate.getDate() - 1);
+    previousDay.setHours(0, 0, 0, 0);
     setSelectedDate(previousDay);
   };
 
   const goToNextDay = () => {
     const nextDay = new Date(selectedDate);
     nextDay.setDate(selectedDate.getDate() + 1);
+    nextDay.setHours(0, 0, 0, 0);
     setSelectedDate(nextDay);
   };
 
   const goToToday = () => {
-    setSelectedDate(new Date());
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    setSelectedDate(today);
   };
 
   // Load data on mount
   useEffect(() => {
-    const savedTasks = JSON.parse(localStorage.getItem("tasks")) || {};
-    const savedCompletedTask = JSON.parse(localStorage.getItem("completedTask")) || {};
-    const savedDarkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
-    setTasks(savedTasks);
-    setCompletedTask(savedCompletedTask);
-    setIsDarkMode(savedDarkMode);
+    try {
+      const savedTasks = JSON.parse(localStorage.getItem("tasks")) || {};
+      const savedCompletedTask = JSON.parse(localStorage.getItem("completedTask")) || {};
+      const savedDarkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
+      
+      setTasks(savedTasks);
+      setCompletedTask(savedCompletedTask);
+      setIsDarkMode(savedDarkMode);
+    } catch (error) {
+      console.error("Error loading data from localStorage", error);
+    }
   }, []);
 
   return {

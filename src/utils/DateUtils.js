@@ -1,5 +1,9 @@
 export const DateUtils = {
-  formatDateKey: (date) => date.toISOString().split('T')[0],
+  formatDateKey: (date) => {
+    // Use local timezone to ensure consistent date key
+    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    return localDate.toISOString().split('T')[0];
+  },
 
   formatDisplayDate: (date) => {
     const options = { 
@@ -18,21 +22,23 @@ export const DateUtils = {
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
 
-    // Mendapatkan jam saat ini untuk memeriksa apakah sudah melewati tengah malam
-    const currentHour = today.getHours();
-    const currentDate = today.getDate();
+    // Normalize dates to remove time component for accurate comparison
+    const normalizeDate = (d) => {
+      const normalized = new Date(d);
+      normalized.setHours(0, 0, 0, 0);
+      return normalized;
+    };
 
-    // Jika sudah lewat jam tengah malam (00:00) dan tanggal sudah berganti
-    if (currentHour === 0 && currentDate !== new Date().getDate()) {
-      return 'Hari Ini';
-    }
+    const normalizedDate = normalizeDate(date);
+    const normalizedToday = normalizeDate(today);
+    const normalizedTomorrow = normalizeDate(tomorrow);
+    const normalizedYesterday = normalizeDate(yesterday);
 
-    // Logika untuk menampilkan 'Hari Ini', 'Besok', 'Kemarin'
-    if (DateUtils.formatDateKey(date) === DateUtils.formatDateKey(today)) {
+    if (normalizedDate.getTime() === normalizedToday.getTime()) {
       return 'Hari Ini';
-    } else if (DateUtils.formatDateKey(date) === DateUtils.formatDateKey(tomorrow)) {
+    } else if (normalizedDate.getTime() === normalizedTomorrow.getTime()) {
       return 'Besok';
-    } else if (DateUtils.formatDateKey(date) === DateUtils.formatDateKey(yesterday)) {
+    } else if (normalizedDate.getTime() === normalizedYesterday.getTime()) {
       return 'Kemarin';
     } else {
       return date.toLocaleDateString('id-ID', { weekday: 'long' });
